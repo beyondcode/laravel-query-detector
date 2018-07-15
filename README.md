@@ -7,7 +7,8 @@
 
 The Laravel N+1 query detector helps you increase your application's performance by reducing the number of queries it executed.
 This package will monitor your queries while you develop your application and notify you when you should add eager loading (N+1 queries).
- 
+
+![Example alert](https://beyondco.de/github/n+1/alert.png) 
 
 ## Installation
 

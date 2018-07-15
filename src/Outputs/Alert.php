@@ -32,7 +32,9 @@ class Alert implements Output
         $output = '<script type="text/javascript">';
         $output .= "alert('Found the following N+1 queries in this request:\\n\\n";
         foreach ($detectedQueries as $detectedQuery) {
-            $output .= "Model: ".addslashes($detectedQuery['model']). " => Relation: ".addslashes($detectedQuery['relation'])."\\n";
+            $output .= "Model: ".addslashes($detectedQuery['model']). " => Relation: ".addslashes($detectedQuery['relation']);
+            $output .= " - You should add \"with(\'".$detectedQuery['relation']."\')\" to eager-load this relation.";
+            $output .= "\\n";
         }
         $output .= "')";
         $output .= '</script>';
