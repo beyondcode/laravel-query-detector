@@ -5,8 +5,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/beyondcode/laravel-query-detector.svg?style=flat-square)](https://scrutinizer-ci.com/g/beyondcode/laravel-query-detector)
 [![Total Downloads](https://img.shields.io/packagist/dt/beyondcode/laravel-query-detector.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-query-detector)
 
-The Laravel N+1 query detector helps you increase your application's performance by reducing the number of queries it executed.
-This package will monitor your queries while you develop your application and notify you when you should add eager loading (N+1 queries).
+The Laravel N+1 query detector helps you to increase your application's performance by reducing the number of queries it executes. This package monitors your queries in real-time, while you develop your application and notify you when you should add eager loading (N+1 queries).
 
 ![Example alert](https://beyondco.de/github/n+1/alert.png) 
 
@@ -22,10 +21,9 @@ The package will automatically register itself.
 
 ## Usage
 
-The query monitor will be automatically activated, if you are in debug mode.
+If you run your application in the `debug` mode, the query monitor will be automatically active. So there is nothing you have to do.
 
-By default, this package will display an alert message to notify you about found N+1 queries in the current request.
-If you rather want this information to be written to your `laravel.log` file, you can publish the configuration and change the output behaviour.
+By default, this package will display an `alert()` message to notify you about an N+1 query found in the current request. If you rather want this information to be written to your `laravel.log` file, you can publish the configuration and change the output behaviour (see example below).
 
 You can publish the package's configuration using this command:
 
@@ -33,7 +31,7 @@ You can publish the package's configuration using this command:
 php artisan vendor:publish --provider=BeyondCode\\QueryDetector\\QueryDetectorServiceProvider
 ```
 
-This will publish the `querydetector.php` file in your config directory with the following contents:
+This will add the `querydetector.php` file in your config directory with the following contents:
 
 ```php
 <?php
