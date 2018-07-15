@@ -1,6 +1,6 @@
 {
     "name": "beyondcode/laravel-query-detector",
-    "description": ":package_description",
+    "description": "Laravel N+1 Query Detector",
     "keywords": [
         "beyondcode",
         "laravel-query-detector"
