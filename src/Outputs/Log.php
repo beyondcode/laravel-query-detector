@@ -3,8 +3,8 @@
 namespace BeyondCode\QueryDetector\Outputs;
 
 use Log as LaravelLog;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 class Log implements Output
 {

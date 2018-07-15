@@ -2,11 +2,11 @@
 
 namespace BeyondCode\QueryDetector\Tests;
 
-use BeyondCode\QueryDetector\Tests\Models\Comment;
 use Route;
 use BeyondCode\QueryDetector\QueryDetector;
 use BeyondCode\QueryDetector\Tests\Models\Post;
 use BeyondCode\QueryDetector\Tests\Models\Author;
+use BeyondCode\QueryDetector\Tests\Models\Comment;
 
 class QueryDetectorTest extends TestCase
 {
@@ -206,5 +206,22 @@ class QueryDetectorTest extends TestCase
         $queries = app(QueryDetector::class)->getDetectedQueries();
 
         $this->assertCount(0, $queries);
+    }
+
+    /** @test */
+    public function it_ignores_redirects()
+    {
+        Route::get('/', function (){
+            foreach (Post::all() as $post) {
+                $post->comments;
+            }
+            return redirect()->to('/random');
+        });
+
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(1, $queries);
     }
 }

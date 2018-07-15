@@ -2,8 +2,8 @@
 
 namespace BeyondCode\QueryDetector\Outputs;
 
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 interface Output
 {

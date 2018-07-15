@@ -43,20 +43,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         ]);
 
         $app['config']->set('app.key', 'base64:6Cu/ozj4gPtIjmXjr8EdVnGFNsdRqZfHfVjQkmTlg4Y=');
-
-
-        $app['config']->set('logging.default', 'test');
-
-        $app['config']->set('logging.channels', [
-            'test' => [
-                'driver' => 'custom',
-                'via' => function () {
-                    $monolog = new Logger('test');
-                    $monolog->pushHandler(new TestHandler());
-                    return $monolog;
-                },
-            ],
-        ]);
     }
 
 

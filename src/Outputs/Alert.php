@@ -2,13 +2,17 @@
 
 namespace BeyondCode\QueryDetector\Outputs;
 
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 class Alert implements Output
 {
     public function output(Collection $detectedQueries, Response $response)
     {
+        if ($response->isRedirection()) {
+            return;
+        }
+
         $content = $response->getContent();
 
         $outputContent = $this->getOutputContent($detectedQueries);

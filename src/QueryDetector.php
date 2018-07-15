@@ -3,9 +3,9 @@
 namespace BeyondCode\QueryDetector;
 
 use DB;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 class QueryDetector
