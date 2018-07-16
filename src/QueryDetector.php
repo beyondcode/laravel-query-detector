@@ -29,13 +29,9 @@ class QueryDetector
 
     public function isEnabled(): bool
     {
-        $configEnabled = value(config('querydetector.enabled'));
+        $config = config('querydetector.enabled');
 
-        if ($configEnabled === null) {
-            $configEnabled = config('app.debug');
-        }
-
-        return $configEnabled;
+        return is_null($config) ? false : $config;
     }
 
     public function logQuery($query, Collection $backtrace)
@@ -172,8 +168,15 @@ class QueryDetector
 
     protected function applyOutput(Response $response)
     {
-        $outputType = app(config('querydetector.output'));
-        $outputType->output($this->getDetectedQueries(), $response);
+        $outputTypes = app(config('querydetector.output'));
+
+        if (! is_array($outputTypes)) {
+            $types = [$outputTypes];
+        }
+
+        foreach ($outputTypes as $type) {
+            $type->output($this->getDetectedQueries(), $response);
+        }
     }
 
     public function output($request, $response)
