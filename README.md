@@ -80,6 +80,12 @@ return [
 ];
 ```
 
+If you use **Lumen**, you need to copy the config file manually and register the Lumen Service Provider in `bootstrap/app.php` file
+
+```php
+$this->app->register(\BeyondCode\QueryDetector\LumenQueryDetectorServiceProvider::class);
+```
+
 ### Testing
 
 ``` bash
