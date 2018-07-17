@@ -29,9 +29,13 @@ class QueryDetector
 
     public function isEnabled(): bool
     {
-        $config = config('querydetector.enabled');
+        $configEnabled = value(config('querydetector.enabled'));
 
-        return is_null($config) ? false : $config;
+        if ($configEnabled === null) {
+            $configEnabled = config('app.debug');
+        }
+
+        return $configEnabled;
     }
 
     public function logQuery($query, Collection $backtrace)

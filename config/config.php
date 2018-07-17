@@ -4,7 +4,7 @@ return [
     /*
      * Enable or disable the query detection.
      */
-    'enabled' => env('QUERY_DETECTOR_ENABLED', false),
+    'enabled' => env('QUERY_DETECTOR_ENABLED', null),
 
     /*
      * Here you can whitelist model relations.
@@ -21,7 +21,7 @@ return [
     ],
 
     /*
-     * Define the output format that you want to use.
+     * Define the output formats that you want to use.
      * Available options are:
      *
      * Alert:
@@ -32,6 +32,8 @@ return [
      * Writes the N+1 queries into the Laravel.log file
      * \BeyondCode\QueryDetector\Outputs\Log::class
      */
-    'output' => \BeyondCode\QueryDetector\Outputs\Alert::class,
-
+    'output' => [
+        \BeyondCode\QueryDetector\Outputs\Log::class,
+        \BeyondCode\QueryDetector\Outputs\Alert::class,
+    ]
 ];
