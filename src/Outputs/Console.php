@@ -2,7 +2,7 @@
 namespace BeyondCode\QueryDetector\Outputs;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
-class Alert implements Output
+class Console implements Output
 {
     public function output(Collection $detectedQueries, Response $response)
     {
