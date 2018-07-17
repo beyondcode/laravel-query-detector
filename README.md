@@ -7,7 +7,7 @@
 
 The Laravel N+1 query detector helps you to increase your application's performance by reducing the number of queries it executes. This package monitors your queries in real-time, while you develop your application and notify you when you should add eager loading (N+1 queries).
 
-![Example alert](https://beyondco.de/github/n+1/alert.png) 
+![Example alert](https://beyondco.de/github/n+1/alert.png)
 
 ## Installation
 
@@ -42,7 +42,7 @@ return [
      * If this is set to "null", the app.debug config value will be used.
      */
     'enabled' => env('QUERY_DETECTOR_ENABLED', null),
-    
+
     /*
      * Threshold level for the N+1 query detection. If a relation query will be
      * executed more then this amount, the detector will notify you about it.
@@ -64,7 +64,7 @@ return [
     ],
 
     /*
-     * Define the output format that you want to use.
+     * Define the output format that you want to use. Multiple classes are supported
      * Available options are:
      *
      * Alert:
@@ -75,7 +75,9 @@ return [
      * Writes the N+1 queries into the Laravel.log file
      * \BeyondCode\QueryDetector\Outputs\Log::class
      */
-    'output' => \BeyondCode\QueryDetector\Outputs\Alert::class,
+    'output' => [
+        \BeyondCode\QueryDetector\Outputs\Alert::class
+    ]
 
 ];
 ```

@@ -22,7 +22,7 @@ return [
     ],
 
     /*
-     * Define the output format that you want to use.
+     * Define the output formats that you want to use.
      * Available options are:
      *
      * Alert:
@@ -33,6 +33,8 @@ return [
      * Writes the N+1 queries into the Laravel.log file
      * \BeyondCode\QueryDetector\Outputs\Log::class
      */
-    'output' => \BeyondCode\QueryDetector\Outputs\Alert::class,
-
+    'output' => [
+        \BeyondCode\QueryDetector\Outputs\Log::class,
+        \BeyondCode\QueryDetector\Outputs\Alert::class,
+    ]
 ];
