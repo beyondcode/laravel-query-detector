@@ -29,6 +29,10 @@ return [
      * Displays an alert on the website
      * \BeyondCode\QueryDetector\Outputs\Alert::class
      *
+     * Debugbar: (make sure you have the barryvdh/laravel-debugbar package installed)
+     * Writes the N+1 queries into a custom messages collector of Debugbar
+     * \BeyondCode\QueryDetector\Outputs\Debugbar::class
+     *
      * Log:
      * Writes the N+1 queries into the Laravel.log file
      * \BeyondCode\QueryDetector\Outputs\Log::class
