@@ -15,7 +15,7 @@ class Debugbar implements Output
         $collector = new MessagesCollector('N+1 Queries');
 
         foreach ($detectedQueries as $detectedQuery) {
-            $collector->addMessage(sprintf('Model: %s => Relation: %s - You should add with(%s) to eager-load this relation.',
+            $collector->addMessage(sprintf('Model: %s => Relation: %s - You should add `with(%s)` to eager-load this relation.',
                 $detectedQuery['model'],
                 $detectedQuery['relation'],
                 $detectedQuery['relation']
