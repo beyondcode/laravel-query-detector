@@ -55,7 +55,7 @@ class QueryDetector
             });
 
             // We try to access a relation
-            if (is_array($relation)) {
+            if (is_array($relation) && isset($relation['object'])) {
                 if ($relation['class'] === Relation::class) {
                     $model = get_class($relation['object']->getParent());
                     $relationName = get_class($relation['object']->getRelated());
