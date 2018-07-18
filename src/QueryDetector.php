@@ -172,14 +172,14 @@ class QueryDetector
 
     protected function applyOutput(Response $response)
     {
-        $outputTypes = app(config('querydetector.output'));
+        $outputTypes = config('querydetector.output');
 
         if (! is_array($outputTypes)) {
-            $types = [$outputTypes];
+            $outputTypes = [$outputTypes];
         }
 
         foreach ($outputTypes as $type) {
-            $type->output($this->getDetectedQueries(), $response);
+            app($type)->output($this->getDetectedQueries(), $response);
         }
     }
 
