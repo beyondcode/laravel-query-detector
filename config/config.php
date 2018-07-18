@@ -22,17 +22,23 @@ return [
     ],
 
     /*
-     * Define the output format that you want to use.
+     * Define the output formats that you want to use.
      * Available options are:
      *
      * Alert:
      * Displays an alert on the website
      * \BeyondCode\QueryDetector\Outputs\Alert::class
      *
+     * Debugbar: (make sure you have the barryvdh/laravel-debugbar package installed)
+     * Writes the N+1 queries into a custom messages collector of Debugbar
+     * \BeyondCode\QueryDetector\Outputs\Debugbar::class
+     *
      * Log:
      * Writes the N+1 queries into the Laravel.log file
      * \BeyondCode\QueryDetector\Outputs\Log::class
      */
-    'output' => \BeyondCode\QueryDetector\Outputs\Alert::class,
-
+    'output' => [
+        \BeyondCode\QueryDetector\Outputs\Log::class,
+        \BeyondCode\QueryDetector\Outputs\Alert::class,
+    ]
 ];
