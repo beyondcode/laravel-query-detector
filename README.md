@@ -23,7 +23,9 @@ The package will automatically register itself.
 
 If you run your application in the `debug` mode, the query monitor will be automatically active. So there is nothing you have to do.
 
-By default, this package will display an `alert()` message to notify you about an N+1 query found in the current request. If you rather want this information to be written to your `laravel.log` file, you can publish the configuration and change the output behaviour (see example below).
+By default, this package will display an `alert()` message to notify you about an N+1 query found in the current request. 
+
+If you rather want this information to be written to your `laravel.log` file, written to your browser's console log as a warning or listed in a new tab for the [Laravel Debugbar (barryvdh/laravel-debugbar)](https://github.com/barryvdh/laravel-debugbar), you can publish the configuration and change the output behaviour (see example below).
 
 You can publish the package's configuration using this command:
 
@@ -70,6 +72,10 @@ return [
      * Alert:
      * Displays an alert on the website
      * \BeyondCode\QueryDetector\Outputs\Alert::class
+     *
+     * Debugbar: (make sure you have the barryvdh/laravel-debugbar package installed)
+     * Writes the N+1 queries into a custom messages collector of Debugbar
+     * \BeyondCode\QueryDetector\Outputs\Debugbar::class
      *
      * Log:
      * Writes the N+1 queries into the Laravel.log file
