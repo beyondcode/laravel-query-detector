@@ -3,7 +3,9 @@
 namespace BeyondCode\QueryDetector\Tests;
 
 use Route;
+use Illuminate\Support\Facades\Event;
 use BeyondCode\QueryDetector\QueryDetector;
+use BeyondCode\QueryDetector\Events\QueryDetected;
 use BeyondCode\QueryDetector\Tests\Models\Post;
 use BeyondCode\QueryDetector\Tests\Models\Author;
 use BeyondCode\QueryDetector\Tests\Models\Comment;
@@ -223,5 +225,41 @@ class QueryDetectorTest extends TestCase
         $queries = app(QueryDetector::class)->getDetectedQueries();
 
         $this->assertCount(1, $queries);
+    }
+
+    /** @test */
+    public function it_fires_an_event_if_detects_n1_query()
+    {
+        Event::fake();
+
+        Route::get('/', function (){
+            $authors = Author::all();
+
+            foreach ($authors as $author) {
+                $author->profile;
+            }
+        });
+
+        $this->get('/');
+
+        Event::assertDispatched(QueryDetected::class);
+    }
+
+    /** @test */
+    public function it_does_not_fire_an_event_if_there_is_no_n1_query()
+    {
+        Event::fake();
+
+        Route::get('/', function (){
+            $authors = Author::with('profile')->get();
+
+            foreach ($authors as $author) {
+                $author->profile;
+            }
+        });
+
+        $this->get('/');
+
+        Event::assertNotDispatched(QueryDetected::class);
     }
 }

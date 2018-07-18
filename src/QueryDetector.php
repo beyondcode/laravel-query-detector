@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use BeyondCode\QueryDetector\Events\QueryDetected;
 
 class QueryDetector
 {
@@ -167,7 +168,13 @@ class QueryDetector
             }
         }
 
-        return $queries->where('count', '>', config('querydetector.threshold', 1))->values();
+        $queries = $queries->where('count', '>', config('querydetector.threshold', 1))->values();
+
+        if ($queries->isNotEmpty()) {
+            event(new QueryDetected($queries));
+        }
+
+        return $queries;
     }
 
     protected function applyOutput(Response $response)
