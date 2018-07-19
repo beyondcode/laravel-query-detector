@@ -80,6 +80,10 @@ return [
      * Log:
      * Writes the N+1 queries into the Laravel.log file
      * \BeyondCode\QueryDetector\Outputs\Log::class
+     *
+     * Console:
+     * Writes the N+1 queries into your browsers console log
+     * \BeyondCode\QueryDetector\Outputs\Console::class
      */
     'output' => [
         \BeyondCode\QueryDetector\Outputs\Alert::class
