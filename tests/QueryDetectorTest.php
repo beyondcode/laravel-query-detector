@@ -262,4 +262,30 @@ class QueryDetectorTest extends TestCase
 
         Event::assertNotDispatched(QueryDetected::class);
     }
+    /** @test */
+    public function it_uses_the_trace_line_to_detect_queries()
+    {
+        Route::get('/', function (){
+            $authors = Author::all();
+            $authors2 = Author::all();
+
+            foreach ($authors as $author) {
+                $author->profile->city;
+            }
+
+            foreach ($authors2 as $author) {
+                $author->profile->city;
+            }
+        });
+
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(2, $queries);
+
+        $this->assertSame(Author::count(), $queries[0]['count']);
+        $this->assertSame(Author::class, $queries[0]['model']);
+        $this->assertSame('profile', $queries[0]['relation']);
+    }
 }

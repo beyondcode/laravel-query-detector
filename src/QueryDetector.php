@@ -67,7 +67,9 @@ class QueryDetector
                     $relatedModel = $relationName;
                 }
 
-                $key = md5($query->sql . $model . $relationName);
+                $sources = $this->findSource($backtrace);
+
+                $key = md5($query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
 
                 $count = array_get($this->queries, $key.'.count', 0);
 
@@ -77,7 +79,7 @@ class QueryDetector
                     'model' => $model,
                     'relatedModel' => $relatedModel,
                     'relation' => $relationName,
-                    'sources' => $this->findSource($backtrace)
+                    'sources' => $sources
                 ];
             }
         }
@@ -91,7 +93,7 @@ class QueryDetector
             $sources[] = $this->parseTrace($index, $trace);
         }
 
-        return array_filter($sources);
+        return array_values(array_filter($sources));
     }
 
     public function parseTrace($index, array $trace)
