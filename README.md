@@ -95,7 +95,7 @@ return [
 If you use **Lumen**, you need to copy the config file manually and register the Lumen Service Provider in `bootstrap/app.php` file
 
 ```php
-$this->app->register(\BeyondCode\QueryDetector\LumenQueryDetectorServiceProvider::class);
+$app->register(\BeyondCode\QueryDetector\LumenQueryDetectorServiceProvider::class);
 ```
 
 If you need additional logic to run when the package detects unoptimized queries, you can listen to the `\BeyondCode\QueryDetector\Events\QueryDetected` event and write a listener to run your own handler. (e.g. send warning to Sentry/Bugsnag, send Slack notification, etc.)
