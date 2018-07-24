@@ -9,7 +9,7 @@ class Alert implements Output
 {
     public function output(Collection $detectedQueries, Response $response)
     {
-        if ($response->isRedirection()) {
+        if (stripos($response->headers->get('Content-Type'), 'text/html') !== 0 || $response->isRedirection()) {
             return;
         }
 
