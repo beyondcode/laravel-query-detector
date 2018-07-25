@@ -7,6 +7,10 @@ use Illuminate\Http\JsonResponse;
 
 class Json implements Output
 {
+    public function boot()
+    {
+        //
+    }
 
     public function output(Collection $detectedQueries, Response $response)
     {

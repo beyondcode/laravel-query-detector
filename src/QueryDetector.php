@@ -26,6 +26,11 @@ class QueryDetector
 
             $this->logQuery($query, $backtrace);
         });
+
+        foreach ($this->getOutputTypes() as $outputType) {
+            app()->singleton($outputType);
+            app($outputType)->boot();
+        }
     }
 
     public function isEnabled(): bool
@@ -179,7 +184,7 @@ class QueryDetector
         return $queries;
     }
 
-    protected function applyOutput(Response $response)
+    protected function getOutputTypes()
     {
         $outputTypes = config('querydetector.output');
 
@@ -187,7 +192,12 @@ class QueryDetector
             $outputTypes = [$outputTypes];
         }
 
-        foreach ($outputTypes as $type) {
+        return $outputTypes;
+    }
+
+    protected function applyOutput(Response $response)
+    {
+        foreach ($this->getOutputTypes() as $type) {
             app($type)->output($this->getDetectedQueries(), $response);
         }
     }

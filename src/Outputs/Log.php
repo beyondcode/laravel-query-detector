@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Log implements Output
 {
+    public function boot()
+    {
+        //
+    }
+
     public function output(Collection $detectedQueries, Response $response)
     {
         LaravelLog::info('Detected N+1 Query');
