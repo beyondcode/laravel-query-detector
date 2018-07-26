@@ -7,6 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Alert implements Output
 {
+    public function boot()
+    {
+        //
+    }
+
     public function output(Collection $detectedQueries, Response $response)
     {
         if (stripos($response->headers->get('Content-Type'), 'text/html') !== 0 || $response->isRedirection()) {
