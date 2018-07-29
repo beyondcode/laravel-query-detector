@@ -90,7 +90,8 @@ return [
      * \BeyondCode\QueryDetector\Outputs\Json::class
      */
     'output' => [
-        \BeyondCode\QueryDetector\Outputs\Alert::class
+        \BeyondCode\QueryDetector\Outputs\Log::class,
+        \BeyondCode\QueryDetector\Outputs\Alert::class,
     ]
 
 ];
