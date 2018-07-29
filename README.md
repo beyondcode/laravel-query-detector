@@ -66,7 +66,7 @@ return [
     ],
 
     /*
-     * Define the output formats that you want to use.
+     * Define the output format that you want to use. Multiple classes are supported.
      * Available options are:
      *
      * Alert:
