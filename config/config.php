@@ -22,7 +22,7 @@ return [
     ],
 
     /*
-     * Define the output formats that you want to use.
+     * Define the output format that you want to use. Multiple classes are supported.
      * Available options are:
      *
      * Alert:
@@ -50,7 +50,7 @@ return [
      * \BeyondCode\QueryDetector\Outputs\Log::class
      */
     'output' => [
-        \BeyondCode\QueryDetector\Outputs\Log::class,
         \BeyondCode\QueryDetector\Outputs\Alert::class,
+        \BeyondCode\QueryDetector\Outputs\Log::class,
     ]
 ];
