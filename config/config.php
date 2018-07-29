@@ -29,21 +29,25 @@ return [
      * Displays an alert on the website
      * \BeyondCode\QueryDetector\Outputs\Alert::class
      *
-     * Debugbar: (make sure you have the barryvdh/laravel-debugbar package installed)
-     * Writes the N+1 queries into a custom messages collector of Debugbar
-     * \BeyondCode\QueryDetector\Outputs\Debugbar::class
-     *
-     * Log:
-     * Writes the N+1 queries into the Laravel.log file
-     * \BeyondCode\QueryDetector\Outputs\Log::class
-     *
      * Console:
      * Writes the N+1 queries into your browsers console log
      * \BeyondCode\QueryDetector\Outputs\Console::class
      *
+     * Clockwork: (make sure you have the itsgoingd/clockwork package installed)
+     * Writes the N+1 queries warnings to Clockwork log
+     * \BeyondCode\QueryDetector\Outputs\Clockwork::class
+     *
+     * Debugbar: (make sure you have the barryvdh/laravel-debugbar package installed)
+     * Writes the N+1 queries into a custom messages collector of Debugbar
+     * \BeyondCode\QueryDetector\Outputs\Debugbar::class
+     *
      * JSON:
      * Writes the N+1 queries into the response body of your JSON responses
      * \BeyondCode\QueryDetector\Outputs\Json::class
+     *
+     * Log:
+     * Writes the N+1 queries into the Laravel.log file
+     * \BeyondCode\QueryDetector\Outputs\Log::class
      */
     'output' => [
         \BeyondCode\QueryDetector\Outputs\Log::class,
