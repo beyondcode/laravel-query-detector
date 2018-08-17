@@ -100,6 +100,31 @@ return [
 
 ];
 ```
+## Integration with ajax requests
+
+To perform the integration with ajax requests you must add the variable: `QUERY_DETECTOR_AJAX` in the file: `.env`
+
+```
+QUERY_DETECTOR_AJAX=true
+```
+In addition to this you must add the following javascript code globally in your project to show the alert. You can tentatively add it or import it into the blade layout file of your project.
+
+``` javascript
+$(document).ajaxComplete(function(event, response){
+    if (typeof response.responseJSON.laravelQueryDetector != 'undefined') {
+        alert(response.responseJSON.laravelQueryDetector);
+    }
+});
+```
+
+Make sure that the content type of your ajax request is: `application/json` and the `dataType` is equal to `json`, as follows:
+
+``` javascript
+$.ajax({
+    url: 'your-url',
+    dataType: 'json'
+});
+```
 
 If you use **Lumen**, you need to copy the config file manually and register the Lumen Service Provider in `bootstrap/app.php` file
 
