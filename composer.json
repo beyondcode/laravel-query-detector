@@ -1,5 +1,5 @@
 {
-    "name": "beyondcode/laravel-query-detector",
+    "name": "jeysonlesmes/laravel-query-detector",
     "description": "Laravel N+1 Query Detector",
     "keywords": [
         "beyondcode",
