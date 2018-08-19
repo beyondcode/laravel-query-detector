@@ -259,7 +259,8 @@ class QueryDetector
     /**
      * Get the output.
      *
-     * @param  $request  * @param  Response  $response
+     * @param  mixed  $request
+     * @param  Response  $response
      * @return mixed
      */
     public function output($request, $response)
