@@ -9,7 +9,7 @@ class LumenQueryDetectorServiceProvider extends ServiceProvider
     /**
      * Register the service provider.
      *
-     * @return vpid
+     * @return void
      */
     public function register()
     {
