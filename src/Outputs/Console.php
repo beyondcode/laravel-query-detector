@@ -7,11 +7,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Console implements Output
 {
+    /**
+     * Boot the Output.
+     *
+     * @return void
+     */
     public function boot()
     {
         //
     }
 
+    /**
+     * Generate the output.
+     *
+     * @param  \Illuminate\Support\Collection  $detectedQueries
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @return void
+     */
     public function output(Collection $detectedQueries, Response $response)
     {
         if (stripos($response->headers->get('Content-Type'), 'text/html') !== 0 || $response->isRedirection()) {
@@ -24,7 +36,7 @@ class Console implements Output
 
         $pos = strripos($content, '</body>');
 
-        if (false !== $pos) {
+        if ($pos !== false) {
             $content = substr($content, 0, $pos) . $outputContent . substr($content, $pos);
         } else {
             $content = $content . $outputContent;
@@ -36,6 +48,12 @@ class Console implements Output
         $response->headers->remove('Content-Length');
     }
 
+    /**
+     * Get the output content.
+     *
+     * @param  \Illuminate\Support\Collection  $detectedQueries
+     * @return string
+     */
     protected function getOutputContent(Collection $detectedQueries)
     {
         $output = '<script type="text/javascript">';

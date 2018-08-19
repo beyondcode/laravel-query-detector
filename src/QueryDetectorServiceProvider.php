@@ -9,6 +9,8 @@ class QueryDetectorServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
+     *
+     * @return void
      */
     public function boot()
     {
@@ -23,6 +25,8 @@ class QueryDetectorServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
+     *
+     * @return void
      */
     public function register()
     {
@@ -36,7 +40,8 @@ class QueryDetectorServiceProvider extends ServiceProvider
     /**
      * Register the middleware
      *
-     * @param  string $middleware
+     * @param  string  $middleware
+     * @return void
      */
     protected function registerMiddleware($middleware)
     {

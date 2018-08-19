@@ -6,9 +6,19 @@ use Closure;
 
 class QueryDetectorMiddleware
 {
-    /** @var QueryDetector */
+    /**
+     * The query detector.
+     *
+     * @var \BeyondCode\QueryDetector\QueryDetector
+     */
     private $detector;
 
+    /**
+     * QueryDetectorMiddleware constructor.
+     *
+     * @param  \BeyondCode\QueryDetector\QueryDetector  $detector
+     * @return void
+     */
     public function __construct(QueryDetector $detector)
     {
         $this->detector = $detector;
@@ -17,8 +27,8 @@ class QueryDetectorMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)

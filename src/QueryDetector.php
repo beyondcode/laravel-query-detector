@@ -6,19 +6,33 @@ use DB;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use BeyondCode\QueryDetector\Events\QueryDetected;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class QueryDetector
 {
-    /** @var Collection */
+    /**
+     * The queries collection.
+     *
+     * @var \Illuminate\Support\Collection
+     */
     private $queries;
 
+    /**
+     * QueryDetector constructor.
+     *
+     * @return void
+     */
     public function __construct()
     {
-        $this->queries = Collection::make();
+        $this->queries = new Collection;
     }
 
+    /**
+     * Boot the query detector.
+     *
+     * @return void
+     */
     public function boot()
     {
         DB::listen(function($query) {
@@ -33,6 +47,11 @@ class QueryDetector
         }
     }
 
+    /**
+     * Check if the detector is enabled.
+     *
+     * @return bool
+     */
     public function isEnabled(): bool
     {
         $configEnabled = value(config('querydetector.enabled'));
@@ -44,6 +63,12 @@ class QueryDetector
         return $configEnabled;
     }
 
+    /**
+     * Log the query.
+     *
+     * @param  mixed  $query
+     * @param  \Illuminate\Support\Collection  $backtrace
+     */
     public function logQuery($query, Collection $backtrace)
     {
         $modelTrace = $backtrace->first(function ($trace) {
@@ -90,6 +115,12 @@ class QueryDetector
         }
     }
 
+    /**
+     * Find the source.
+     *
+     * @param  array  $stack
+     * @return array
+     */
     protected function findSource($stack)
     {
         $sources = [];
@@ -101,6 +132,13 @@ class QueryDetector
         return array_values(array_filter($sources));
     }
 
+    /**
+     * Parse the trace.
+     *
+     * @param  mixed  $index
+     * @param  array  $trace
+     * @return bool|object
+     */
     public function parseTrace($index, array $trace)
     {
         $frame = (object) [
@@ -124,7 +162,7 @@ class QueryDetector
     /**
      * Check if the given file is to be excluded from analysis
      *
-     * @param string $file
+     * @param  string  $file
      * @return bool
      */
     protected function fileIsInExcludedPath($file)
@@ -148,7 +186,7 @@ class QueryDetector
     /**
      * Shorten the path by removing the relative links and base dir
      *
-     * @param string $path
+     * @param  string  $path
      * @return string
      */
     protected function normalizeFilename($path): string
@@ -160,6 +198,11 @@ class QueryDetector
         return str_replace(base_path(), '', $path);
     }
 
+    /**
+     * Get the detected queries.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getDetectedQueries(): Collection
     {
         $exceptions = config('querydetector.except', []);
@@ -184,6 +227,11 @@ class QueryDetector
         return $queries;
     }
 
+    /**
+     * get the output styles.
+     *
+     * @return mixed
+     */
     protected function getOutputTypes()
     {
         $outputTypes = config('querydetector.output');
@@ -195,6 +243,12 @@ class QueryDetector
         return $outputTypes;
     }
 
+    /**
+     * Apply the output.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @return void
+     */
     protected function applyOutput(Response $response)
     {
         foreach ($this->getOutputTypes() as $type) {
@@ -202,6 +256,12 @@ class QueryDetector
         }
     }
 
+    /**
+     * Get the output.
+     *
+     * @param  $request  * @param  Response  $response
+     * @return mixed
+     */
     public function output($request, $response)
     {
         if ($this->getDetectedQueries()->isNotEmpty()) {

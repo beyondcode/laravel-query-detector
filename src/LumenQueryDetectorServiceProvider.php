@@ -1,18 +1,23 @@
 <?php
+
 namespace BeyondCode\QueryDetector;
 
 use Illuminate\Support\ServiceProvider;
 
 class LumenQueryDetectorServiceProvider extends ServiceProvider
 {
-
+    /**
+     * Register the service provider.
+     *
+     * @return vpid
+     */
     public function register()
     {
         $this->app->configure('querydetector');
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'querydetector');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'querydetector');
 
         $this->app->middleware([
-            QueryDetectorMiddleware::class
+            QueryDetectorMiddleware::class,
         ]);
 
         $this->app->singleton(QueryDetector::class);

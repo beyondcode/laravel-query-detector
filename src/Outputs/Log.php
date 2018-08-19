@@ -8,14 +8,27 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Log implements Output
 {
+    /**
+     * Boot the Output.
+     *
+     * @return void
+     */
     public function boot()
     {
         //
     }
 
+    /**
+     * Generate the output.
+     *
+     * @param  \Illuminate\Support\Collection  $detectedQueries
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @return void
+     */
     public function output(Collection $detectedQueries, Response $response)
     {
         LaravelLog::info('Detected N+1 Query');
+
         foreach ($detectedQueries as $detectedQuery) {
             LaravelLog::info('Model: '.$detectedQuery['model']);
             LaravelLog::info('Relation: '.$detectedQuery['relation']);

@@ -2,22 +2,35 @@
 
 namespace BeyondCode\QueryDetector\Events;
 
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Queue\SerializesModels;
 
-class QueryDetected {
+class QueryDetected
+{
     use SerializesModels;
 
-    /** @var Collection */
+    /**
+     * The queries collection.
+     *
+     * @var \Illuminate\Support\Collection
+     */
     protected $queries;
 
+    /**
+     * QueryDetected constructor.
+     *
+     * @param  \Illuminate\Support\Collection  $queries
+     * @return void
+     */
     public function __construct(Collection $queries)
     {
         $this->queries = $queries;
     }
 
     /**
-     * @return Collection
+     * get the queries collection.
+     *
+     * @return \Illuminate\Support\Collection
      */
     public function getQueries()
     {
