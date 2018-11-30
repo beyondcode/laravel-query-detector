@@ -77,9 +77,11 @@ class QueryDetector
                 $key = md5($query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
 
                 $count = array_get($this->queries, $key.'.count', 0);
+                $time = array_get($this->queries, $key.'.time', 0);
 
                 $this->queries[$key] = [
                     'count' => ++$count,
+                    'time' => $time + $query->time,
                     'query' => $query->sql,
                     'model' => $model,
                     'relatedModel' => $relatedModel,
