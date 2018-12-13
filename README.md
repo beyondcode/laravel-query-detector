@@ -9,6 +9,9 @@ The Laravel N+1 query detector helps you to increase your application's performa
 
 ![Example alert](https://beyondco.de/github/n+1/alert.png)
 
+> If you want to learn how to create reusable PHP packages yourself, take a look at my upcoming [PHP Package Development](https://phppackagedevelopment.com) video course.
+
+
 ## Installation
 
 You can install the package via composer:
