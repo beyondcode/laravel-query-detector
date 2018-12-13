@@ -16,16 +16,21 @@ class Log implements Output
     public function output(Collection $detectedQueries, Response $response)
     {
         LaravelLog::info('Detected N+1 Query');
-        foreach ($detectedQueries as $detectedQuery) {
-            LaravelLog::info('Model: '.$detectedQuery['model']);
-            LaravelLog::info('Relation: '.$detectedQuery['relation']);
-            LaravelLog::info('Num-Called: '.$detectedQuery['count']);
 
-            LaravelLog::info('Call-Stack:');
+        foreach ($detectedQueries as $detectedQuery) {
+            $logOutput = 'Model: '.$detectedQuery['model'] . PHP_EOL;
+            
+            $logOutput .= 'Relation: '.$detectedQuery['relation'] . PHP_EOL;
+
+            $logOutput .= 'Num-Called: '.$detectedQuery['count'] . PHP_EOL;
+            
+            $logOutput .= 'Call-Stack:' . PHP_EOL;
 
             foreach ($detectedQuery['sources'] as $source) {
-                LaravelLog::info('#'.$source->index.' '.$source->name.':'.$source->line);
+                $logOutput .= '#'.$source->index.' '.$source->name.':'.$source->line . PHP_EOL;
             }
+
+            LaravelLog::info($logOutput);
         }
     }
 }
