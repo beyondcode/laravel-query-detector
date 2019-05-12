@@ -5,7 +5,7 @@ namespace BeyondCode\QueryDetector\Outputs;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
-use Debugbar as LaravelDebugbar;
+use Barryvdh\Debugbar\Facade as LaravelDebugbar;
 use DebugBar\DataCollector\MessagesCollector;
 
 class Debugbar implements Output
