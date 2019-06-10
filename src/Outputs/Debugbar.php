@@ -15,8 +15,10 @@ class Debugbar implements Output
     public function boot()
     {
         $this->collector = new MessagesCollector('N+1 Queries');
-
-        LaravelDebugbar::addCollector($this->collector);
+        
+        if (!LaravelDebugbar::hasCollector($this->collector->getName())) {
+            LaravelDebugbar::addCollector($this->collector);
+        }
     }
 
     public function output(Collection $detectedQueries, Response $response)
