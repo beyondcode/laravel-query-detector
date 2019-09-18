@@ -3,6 +3,7 @@
 namespace BeyondCode\QueryDetector;
 
 use DB;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +48,7 @@ class QueryDetector
     public function logQuery($query, Collection $backtrace)
     {
         $modelTrace = $backtrace->first(function ($trace) {
-            return array_get($trace, 'object') instanceof Builder;
+            return Arr::get($trace, 'object') instanceof Builder;
         });
 
         // The query is coming from an Eloquent model
@@ -57,7 +58,7 @@ class QueryDetector
              * or if the class itself is a Relation.
              */
             $relation = $backtrace->first(function ($trace) {
-                return array_get($trace, 'function') === 'getRelationValue' || array_get($trace, 'class') === Relation::class ;
+                return Arr::get($trace, 'function') === 'getRelationValue' || Arr::get($trace, 'class') === Relation::class ;
             });
 
             // We try to access a relation
@@ -76,8 +77,8 @@ class QueryDetector
 
                 $key = md5($query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
 
-                $count = array_get($this->queries, $key.'.count', 0);
-                $time = array_get($this->queries, $key.'.time', 0);
+                $count = Arr::get($this->queries, $key.'.count', 0);
+                $time = Arr::get($this->queries, $key.'.time', 0);
 
                 $this->queries[$key] = [
                     'count' => ++$count,
