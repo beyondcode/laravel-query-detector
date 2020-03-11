@@ -12,7 +12,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected static $setUpRun = false;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

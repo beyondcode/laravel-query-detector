@@ -4,15 +4,42 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 env:
-  matrix:
-    - COMPOSER_FLAGS="--prefer-lowest"
-    - COMPOSER_FLAGS=""
+  - LARAVEL="^5.5" COMPOSER_FLAGS="--prefer-lowest"
+  - LARAVEL="^5.5" COMPOSER_FLAGS=""
+  - LARAVEL="^6.0" COMPOSER_FLAGS="--prefer-lowest"
+  - LARAVEL="^6.0" COMPOSER_FLAGS=""
+  - LARAVEL="^7.0" COMPOSER_FLAGS="--prefer-lowest"
+  - LARAVEL="^7.0" COMPOSER_FLAGS=""
 
-before_script:
-  - travis_retry composer self-update
-  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
+matrix:
+  exclude:
+    - php: 7.1
+      env: LARAVEL="^6.0" COMPOSER_FLAGS="--prefer-lowest"
+    - php: 7.1
+      env: LARAVEL="^6.0" COMPOSER_FLAGS=""
+    - php: 7.1
+      env: LARAVEL="^7.0" COMPOSER_FLAGS="--prefer-lowest"
+    - php: 7.1
+      env: LARAVEL="^7.0" COMPOSER_FLAGS=""
+  allow_failures:
+    - php: 7.4
+      env: LARAVEL="^5.5" COMPOSER_FLAGS="--prefer-lowest"
+    - php: 7.4
+      env: LARAVEL="^6.0" COMPOSER_FLAGS="--prefer-lowest"
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+before_install:
+  - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
+install:
+  - travis_retry composer require laravel/framework:${LARAVEL} --no-interaction --prefer-dist
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
