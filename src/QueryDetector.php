@@ -2,7 +2,7 @@
 
 namespace BeyondCode\QueryDetector;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
