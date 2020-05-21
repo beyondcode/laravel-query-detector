@@ -2,7 +2,7 @@
 
 namespace BeyondCode\QueryDetector\Outputs;
 
-use Log as LaravelLog;
+use Illuminate\Support\Facades\Log as LaravelLog;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
