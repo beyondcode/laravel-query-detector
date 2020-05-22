@@ -14,8 +14,25 @@ class Alert implements Output
 
     public function output(Collection $detectedQueries, Response $response)
     {
-        if (stripos($response->headers->get('Content-Type'), 'text/html') !== 0 || $response->isRedirection()) {
-            return;
+
+        $contentType = $response->headers->get('Content-Type');
+        
+        $validateContentTypeHTML = true;
+
+        if (env('QUERY_DETECTOR_AJAX', false)) {
+            if (request()->ajax()) {
+                if (stripos($contentType, 'application/json') === false || $response->isRedirection()) {
+                    return;
+                }
+
+                $validateContentTypeHTML = false;
+            }
+        }
+
+        if ($validateContentTypeHTML) {
+            if (stripos($contentType, 'text/html') !== 0 || $response->isRedirection()) {
+                return;
+            }
         }
 
         $content = $response->getContent();
@@ -27,7 +44,15 @@ class Alert implements Output
         if (false !== $pos) {
             $content = substr($content, 0, $pos) . $outputContent . substr($content, $pos);
         } else {
-            $content = $content . $outputContent;
+            if (!request()->ajax()) {
+                $content = $content . $outputContent;
+            } else {
+                $jsonResponseContent = json_decode($content);
+
+                $jsonResponseContent->laravelQueryDetector = $outputContent;
+
+                $content = json_encode($jsonResponseContent);
+            }
         }
 
         // Update the new content and reset the content length
@@ -38,15 +63,26 @@ class Alert implements Output
 
     protected function getOutputContent(Collection $detectedQueries)
     {
-        $output = '<script type="text/javascript">';
-        $output .= "alert('Found the following N+1 queries in this request:\\n\\n";
-        foreach ($detectedQueries as $detectedQuery) {
-            $output .= "Model: ".addslashes($detectedQuery['model'])." => Relation: ".addslashes($detectedQuery['relation']);
-            $output .= " - You should add \"with(\'".addslashes($detectedQuery['relation'])."\')\" to eager-load this relation.";
-            $output .= "\\n";
+        if (!request()->ajax()) {
+            $output = '<script type="text/javascript">';
+            $output .= "alert('Found the following N+1 queries in this request:\\n\\n";
+
+            foreach ($detectedQueries as $detectedQuery) {
+                $output .= "Model: " . addslashes($detectedQuery['model']) . " => Relation: " . addslashes($detectedQuery['relation']);
+                $output .= " - You should add \"with(\'" . addslashes($detectedQuery['relation']) . "\')\" to eager-load this relation.";
+                $output .= "\\n";
+            }
+            $output .= "')";
+            $output .= '</script>';
+        } else {
+            $output = "Found the following N+1 queries in this request:\n\n";
+
+            foreach ($detectedQueries as $detectedQuery) {
+                $output .= "Model: " . $detectedQuery['model'] . " => Relation: " . $detectedQuery['relation'];
+                $output .= " - You should add \"with('" . $detectedQuery['relation'] . "')\" to eager-load this relation.";
+                $output .= "\n";
+            }
         }
-        $output .= "')";
-        $output .= '</script>';
 
         return $output;
     }
