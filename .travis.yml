@@ -25,6 +25,8 @@ matrix:
       env: LARAVEL="^7.0" COMPOSER_FLAGS="--prefer-lowest"
     - php: 7.1
       env: LARAVEL="^7.0" COMPOSER_FLAGS=""
+    - php: 8.0
+      env: LARAVEL="^5.5" COMPOSER_FLAGS=""
   allow_failures:
     - php: 7.4
       env: LARAVEL="^5.5" COMPOSER_FLAGS="--prefer-lowest"
