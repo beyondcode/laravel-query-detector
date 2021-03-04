@@ -16,6 +16,9 @@ class QueryDetector
     /** @var string */
     protected $context = 'querydetector';
 
+    /** @var bool */
+    protected $booted = false;
+
     /** @var Collection */
     private $queries;
 
@@ -24,7 +27,7 @@ class QueryDetector
         $this->queries = Collection::make();
     }
 
-    public function boot()
+    protected function boot()
     {
         DB::listen(function($query) {
             $backtrace = collect(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50));
@@ -36,6 +39,41 @@ class QueryDetector
             app()->singleton($outputType);
             app($outputType)->boot();
         }
+    }
+
+    /**
+     * Safely boot if wasn't booted before
+     *
+     * @return void
+     */
+    public function bootIfNotBooted() : void
+    {
+        if ($this->isBooted()) {
+            return;
+        }
+
+        $this->boot();
+        $this->booted();
+    }
+
+    /**
+     * Runs after "boot"
+     *
+     * @return void
+     */
+    protected function booted() : void
+    {
+        $this->booted = true;
+    }
+
+    /**
+     * Determine if already booted
+     *
+     * @return bool
+     */
+    public function isBooted()
+    {
+        return $this->booted;
     }
 
     public function isEnabled(): bool

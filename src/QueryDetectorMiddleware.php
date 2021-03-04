@@ -27,7 +27,7 @@ class QueryDetectorMiddleware
             return $next($request);
         }
 
-        $this->detector->boot();
+        $this->detector->bootIfNotBooted();
 
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
