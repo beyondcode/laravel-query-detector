@@ -4,6 +4,7 @@ namespace BeyondCode\QueryDetector;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,9 @@ use BeyondCode\QueryDetector\Events\QueryDetected;
 
 class QueryDetector
 {
+    /** @var string */
+    protected $context = 'querydetector';
+
     /** @var Collection */
     private $queries;
 
@@ -75,7 +79,7 @@ class QueryDetector
 
                 $sources = $this->findSource($backtrace);
 
-                $key = md5($query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
+                $key = md5($this->context . $query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
 
                 $count = Arr::get($this->queries, $key.'.count', 0);
                 $time = Arr::get($this->queries, $key.'.time', 0);
@@ -87,6 +91,7 @@ class QueryDetector
                     'model' => $model,
                     'relatedModel' => $relatedModel,
                     'relation' => $relationName,
+                    'context' => $this->context,
                     'sources' => $sources
                 ];
             }
@@ -161,6 +166,42 @@ class QueryDetector
         }
 
         return str_replace(base_path(), '', $path);
+    }
+
+    /**
+     * Set specific context for the executed queries.
+     *
+     * @param string $context
+     * @return self
+     */
+    public function setContext(string $context): self
+    {
+        $this->context = $context;
+
+        return $this;
+    }
+
+    /**
+     * Get the current context name
+     *
+     * @param string $context
+     * @return self
+     */
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    /**
+     * Generate a new context for the executed queries.
+     *
+     * @return self
+     */
+    public function newContext(): self
+    {
+        $this->setContext(Str::random());
+
+        return $this;
     }
 
     public function getDetectedQueries(): Collection
