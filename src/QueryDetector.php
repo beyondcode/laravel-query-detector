@@ -10,14 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use BeyondCode\QueryDetector\Events\QueryDetected;
+use BeyondCode\QueryDetector\Concerns\Bootable;
 
 class QueryDetector
 {
+    use Bootable;
     /** @var string */
     protected $context = 'querydetector';
-
-    /** @var bool */
-    protected $booted = false;
 
     /** @var Collection */
     private $queries;
@@ -39,41 +38,6 @@ class QueryDetector
             app()->singleton($outputType);
             app($outputType)->boot();
         }
-    }
-
-    /**
-     * Safely boot if wasn't booted before
-     *
-     * @return void
-     */
-    public function bootIfNotBooted() : void
-    {
-        if ($this->isBooted()) {
-            return;
-        }
-
-        $this->boot();
-        $this->booted();
-    }
-
-    /**
-     * Runs after "boot"
-     *
-     * @return void
-     */
-    protected function booted() : void
-    {
-        $this->booted = true;
-    }
-
-    /**
-     * Determine if already booted
-     *
-     * @return bool
-     */
-    public function isBooted()
-    {
-        return $this->booted;
     }
 
     public function isEnabled(): bool
