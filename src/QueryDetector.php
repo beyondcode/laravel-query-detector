@@ -134,17 +134,19 @@ class QueryDetector
         return $outputTypes;
     }
 
-    protected function applyOutput(Response $response)
+    protected function applyOutput(Collection $detectedQueries, Response $response)
     {
         foreach ($this->getOutputTypes() as $type) {
-            app($type)->output($this->getDetectedQueries(), $response);
+            app($type)->output($detectedQueries, $response);
         }
     }
 
     public function output($request, $response)
     {
-        if ($this->getDetectedQueries()->isNotEmpty()) {
-            $this->applyOutput($response);
+        $detectedQueries = $this->getDetectedQueries();
+
+        if ($detectedQueries->isNotEmpty()) {
+            $this->applyOutput($detectedQueries, $response);
         }
 
         return $response;
