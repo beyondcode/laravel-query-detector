@@ -244,6 +244,24 @@ class QueryDetectorTest extends TestCase
 
         Event::assertDispatched(QueryDetected::class);
     }
+    /** @test */
+    public function it_uses_different_context_for_each_request()
+    {
+        Route::get('/', function (){
+            $authors = Author::all();
+
+            foreach ($authors as $author) {
+                $author->profile;
+            }
+        });
+
+        $this->get('/');
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(2, collect($queries)->pluck('context')->unique());
+    }
 
     /** @test */
     public function it_does_not_fire_an_event_if_there_is_no_n1_query()

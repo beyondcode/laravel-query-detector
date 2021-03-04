@@ -32,6 +32,8 @@ class QueryDetectorMiddleware
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
 
+        $this->detector->newContext();
+
         // Modify the response to add the Debugbar
         $this->detector->output($request, $response);
 
