@@ -42,10 +42,10 @@ class Console implements Output
         $output .= "console.warn('Found the following N+1 queries in this request:\\n\\n";
         foreach ($detectedQueries as $detectedQuery) {
             $output .= "Model: ".addslashes($detectedQuery['model'])." => Relation: ".addslashes($detectedQuery['relation']);
-            $output .= " - You should add \"with(\'".$detectedQuery['relation']."\')\" to eager-load this relation.";
+            $output .= " - You should add \"with(\'".addslashes($detectedQuery['relation'])."\')\" to eager-load this relation.";
             $output .= "\\n\\n";
             $output .= "Model: ".addslashes($detectedQuery['model'])."\\n";
-            $output .= "Relation: ".$detectedQuery['relation']."\\n";
+            $output .= "Relation: ".addslashes($detectedQuery['relation'])."\\n";
             $output .= "Num-Called: ".$detectedQuery['count']."\\n";
             $output .= "\\n";
             $output .= 'Call-Stack:\\n';
