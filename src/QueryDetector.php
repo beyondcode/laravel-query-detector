@@ -213,4 +213,9 @@ class QueryDetector
 
         return $response;
     }
+
+    public function emptyQueries()
+    {
+        $this->queries = Collection::make();
+    }
 }
