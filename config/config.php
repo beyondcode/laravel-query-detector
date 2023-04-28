@@ -9,7 +9,7 @@ return [
 
     /*
      * Threshold level for the N+1 query detection. If a relation query will be
-     * executed more then this amount, the detector will notify you about it.
+     * executed more than this amount, the detector will notify you about it.
      */
     'threshold' => (int) env('QUERY_DETECTOR_THRESHOLD', 1),
 
