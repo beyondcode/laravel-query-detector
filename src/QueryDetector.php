@@ -61,6 +61,37 @@ class QueryDetector
                 return Arr::get($trace, 'function') === 'getRelationValue' || Arr::get($trace, 'class') === Relation::class ;
             });
 
+            if ($relation == null) {
+                $q = $backtrace->first();
+                if ($q !== null && isset($q['args'][0]))
+                {
+                    /** @var \Illuminate\Database\Events\QueryExecuted $query */
+                    $query = $backtrace->first()['args'][0];
+
+                    $model = $q['class'];
+
+                    $relationName = null;
+                    $relatedModel = $relationName;
+
+                    $sources = $this->findSource($backtrace);
+
+                    $key = md5($query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
+
+                    $count = Arr::get($this->queries, $key.'.count', 0);
+                    $time = Arr::get($this->queries, $key.'.time', 0);
+
+                    $this->queries[$key] = [
+                        'count' => ++$count,
+                        'time' => $time + $query->time,
+                        'query' => $query->sql,
+                        'model' => $model,
+                        'relatedModel' => $relatedModel,
+                        'relation' => $relationName,
+                        'sources' => $sources
+                    ];
+                }
+            }
+
             // We try to access a relation
             if (is_array($relation) && isset($relation['object'])) {
                 if ($relation['class'] === Relation::class) {
