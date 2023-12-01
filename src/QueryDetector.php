@@ -14,15 +14,29 @@ class QueryDetector
 {
     /** @var Collection */
     private $queries;
+    /**
+     * @var bool
+     */
+    private $booted = false;
 
-    public function __construct()
+    private function resetQueries()
     {
         $this->queries = Collection::make();
     }
 
+    public function __construct()
+    {
+        $this->resetQueries();
+    }
+
     public function boot()
     {
-        DB::listen(function($query) {
+        if ($this->booted) {
+            $this->resetQueries();
+            return;
+        }
+
+        DB::listen(function ($query) {
             $backtrace = collect(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50));
 
             $this->logQuery($query, $backtrace);
@@ -32,6 +46,8 @@ class QueryDetector
             app()->singleton($outputType);
             app($outputType)->boot();
         }
+
+        $this->booted = true;
     }
 
     public function isEnabled(): bool
@@ -52,13 +68,13 @@ class QueryDetector
         });
 
         // The query is coming from an Eloquent model
-        if (! is_null($modelTrace)) {
+        if (!is_null($modelTrace)) {
             /*
              * Relations get resolved by either calling the "getRelationValue" method on the model,
              * or if the class itself is a Relation.
              */
             $relation = $backtrace->first(function ($trace) {
-                return Arr::get($trace, 'function') === 'getRelationValue' || Arr::get($trace, 'class') === Relation::class ;
+                return Arr::get($trace, 'function') === 'getRelationValue' || Arr::get($trace, 'class') === Relation::class;
             });
 
             // We try to access a relation
@@ -81,8 +97,8 @@ class QueryDetector
 
                 $key = md5($query->sql . $model . $relationName . $sources[0]->name . $sources[0]->line);
 
-                $count = Arr::get($this->queries, $key.'.count', 0);
-                $time = Arr::get($this->queries, $key.'.time', 0);
+                $count = Arr::get($this->queries, $key . '.count', 0);
+                $time = Arr::get($this->queries, $key . '.time', 0);
 
                 $this->queries[$key] = [
                     'count' => ++$count,
@@ -110,7 +126,7 @@ class QueryDetector
 
     public function parseTrace($index, array $trace)
     {
-        $frame = (object) [
+        $frame = (object)[
             'index' => $index,
             'name' => null,
             'line' => isset($trace['line']) ? $trace['line'] : '?',
@@ -195,7 +211,7 @@ class QueryDetector
     {
         $outputTypes = config('querydetector.output');
 
-        if (! is_array($outputTypes)) {
+        if (!is_array($outputTypes)) {
             $outputTypes = [$outputTypes];
         }
 

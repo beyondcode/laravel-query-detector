@@ -35,6 +35,54 @@ class QueryDetectorTest extends TestCase
     }
 
     /** @test */
+    public function it_detects_n1_query_on_multiple_requests()
+    {
+        Route::get('/', function (){
+            $authors = Author::get();
+
+            foreach ($authors as $author) {
+                $author->profile;
+            }
+        });
+
+        // first request
+        $this->get('/');
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+        $this->assertCount(1, $queries);
+        $this->assertSame(Author::count(), $queries[0]['count']);
+        $this->assertSame(Author::class, $queries[0]['model']);
+        $this->assertSame('profile', $queries[0]['relation']);
+
+        // second request
+        $this->get('/');
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+        $this->assertCount(1, $queries);
+        $this->assertSame(Author::count(), $queries[0]['count']);
+        $this->assertSame(Author::class, $queries[0]['model']);
+        $this->assertSame('profile', $queries[0]['relation']);
+    }
+
+    /** @test */
+    public function it_does_not_detect_a_false_n1_query_on_multiple_requests()
+    {
+        Route::get('/', function (){
+            $authors = Author::with("profile")->get();
+
+            foreach ($authors as $author) {
+                $author->profile;
+            }
+        });
+
+        // first request
+        $this->get('/');
+        $this->assertCount(0, app(QueryDetector::class)->getDetectedQueries());
+
+        // second request
+        $this->get('/');
+        $this->assertCount(0, app(QueryDetector::class)->getDetectedQueries());
+    }
+
+    /** @test */
     public function it_ignores_eager_loaded_relationships()
     {
         Route::get('/', function (){
