@@ -336,4 +336,27 @@ class QueryDetectorTest extends TestCase
         $this->assertSame(Author::class, $queries[0]['model']);
         $this->assertSame('profile', $queries[0]['relation']);
     }
+
+    /** @test */
+    public function it_empty_queries()
+    {
+        Route::get('/', function (){
+            $authors = Author::all();
+
+            foreach ($authors as $author) {
+                $author->profile;
+            }
+        });
+
+        $this->get('/');
+
+        $queryDetector = app(QueryDetector::class);
+
+        $queries = $queryDetector->getDetectedQueries();
+        $this->assertCount(1, $queries);
+
+        $queryDetector->emptyQueries();
+        $queries = $queryDetector->getDetectedQueries();
+        $this->assertCount(0, $queries);
+    }
 }
