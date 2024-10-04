@@ -1,8 +1,6 @@
 # Laravel N+1 Query Detector
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/beyondcode/laravel-query-detector.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-query-detector)
-[![Build Status](https://img.shields.io/travis/beyondcode/laravel-query-detector/master.svg?style=flat-square)](https://travis-ci.org/beyondcode/laravel-query-detector)
-[![Quality Score](https://img.shields.io/scrutinizer/g/beyondcode/laravel-query-detector.svg?style=flat-square)](https://scrutinizer-ci.com/g/beyondcode/laravel-query-detector)
 [![Total Downloads](https://img.shields.io/packagist/dt/beyondcode/laravel-query-detector.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-query-detector)
 
 The Laravel N+1 query detector helps you to increase your application's performance by reducing the number of queries it executes. This package monitors your queries in real-time, while you develop your application and notify you when you should add eager loading (N+1 queries).
