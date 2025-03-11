@@ -34,8 +34,12 @@ jobs:
             laravel: 8.*
           - php: 8.3
             laravel: 8.*
+          - php: 8.3
+            laravel: 9.*
           - php: 8.4
             laravel: 8.*
+          - php: 8.4
+            laravel: 9.*
         include:
           - laravel: 8.*
             testbench: 6.23
@@ -47,7 +51,6 @@ jobs:
             testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
-
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ubuntu-latest
 
