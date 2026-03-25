@@ -19,6 +19,9 @@ class QueryDetector
      */
     private $booted = false;
 
+    /** @var int */
+    private $disabledDepth = 0;
+
     private function resetQueries()
     {
         $this->queries = Collection::make();
@@ -37,7 +40,7 @@ class QueryDetector
         }
 
         DB::listen(function ($query) {
-            $backtrace = collect(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50));
+            $backtrace = collect(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, config('querydetector.backtrace_limit', 50)));
 
             $this->logQuery($query, $backtrace);
         });
@@ -61,8 +64,28 @@ class QueryDetector
         return $configEnabled;
     }
 
+    /**
+     * @template T
+     * @param callable(): T $callback
+     * @return T
+     */
+    public function withoutDetection(callable $callback)
+    {
+        $this->disabledDepth++;
+
+        try {
+            return $callback();
+        } finally {
+            $this->disabledDepth--;
+        }
+    }
+
     public function logQuery($query, Collection $backtrace)
     {
+        if ($this->disabledDepth > 0) {
+            return;
+        }
+
         $modelTrace = $backtrace->first(function ($trace) {
             return Arr::get($trace, 'object') instanceof Builder;
         });

@@ -14,6 +14,12 @@ return [
     'threshold' => (int) env('QUERY_DETECTOR_THRESHOLD', 1),
 
     /*
+     * The depth limit for debug_backtrace(). Higher values provide more
+     * complete stack traces but use more memory. Set to 0 for unlimited.
+     */
+    'backtrace_limit' => (int) env('QUERY_DETECTOR_BACKTRACE_LIMIT', 50),
+
+    /*
      * Here you can whitelist model relations.
      *
      * Right now, you need to define the model relation both as the class name and the attribute name on the model.

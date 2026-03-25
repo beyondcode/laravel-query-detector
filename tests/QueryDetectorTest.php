@@ -343,4 +343,116 @@ class QueryDetectorTest extends TestCase
         $queries = $queryDetector->getDetectedQueries();
         $this->assertCount(0, $queries);
     }
+
+    /** @test */
+    public function it_suppresses_n1_detection_with_without_detection()
+    {
+        Route::get('/', function () {
+            app(QueryDetector::class)->withoutDetection(function () {
+                $authors = Author::all();
+
+                foreach ($authors as $author) {
+                    $author->profile;
+                }
+            });
+        });
+
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(0, $queries);
+    }
+
+    /** @test */
+    public function it_resumes_detection_after_without_detection()
+    {
+        Route::get('/', function () {
+            $detector = app(QueryDetector::class);
+
+            $detector->withoutDetection(function () {
+                foreach (Author::all() as $author) {
+                    $author->profile;
+                }
+            });
+
+            // This should still be detected
+            foreach (Post::all() as $post) {
+                $post->comments;
+            }
+        });
+
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(1, $queries);
+        $this->assertSame(Post::class, $queries[0]['model']);
+        $this->assertSame('comments', $queries[0]['relation']);
+    }
+
+    /** @test */
+    public function it_returns_closure_value_from_without_detection()
+    {
+        $result = app(QueryDetector::class)->withoutDetection(function () {
+            return 'hello';
+        });
+
+        $this->assertSame('hello', $result);
+    }
+
+    /** @test */
+    public function it_resumes_detection_even_if_closure_throws()
+    {
+        Route::get('/', function () {
+            $detector = app(QueryDetector::class);
+
+            try {
+                $detector->withoutDetection(function () {
+                    throw new \RuntimeException('test');
+                });
+            } catch (\RuntimeException $e) {
+                // expected
+            }
+
+            // Detection should be active again
+            foreach (Author::all() as $author) {
+                $author->profile;
+            }
+        });
+
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(1, $queries);
+    }
+
+    /** @test */
+    public function it_supports_nested_without_detection_calls()
+    {
+        Route::get('/', function () {
+            $detector = app(QueryDetector::class);
+
+            $detector->withoutDetection(function () use ($detector) {
+                // Inner nested call
+                $detector->withoutDetection(function () {
+                    foreach (Author::all() as $author) {
+                        $author->profile;
+                    }
+                });
+
+                // After inner call returns, outer should still be suppressed
+                foreach (Post::all() as $post) {
+                    $post->comments;
+                }
+            });
+        });
+
+        $this->get('/');
+
+        $queries = app(QueryDetector::class)->getDetectedQueries();
+
+        $this->assertCount(0, $queries);
+    }
 }

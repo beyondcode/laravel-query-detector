@@ -34,6 +34,12 @@ return [
     'threshold' => (int) env('QUERY_DETECTOR_THRESHOLD', 1),
 
     /*
+     * The depth limit for debug_backtrace(). Higher values provide more
+     * complete stack traces but use more memory. Set to 0 for unlimited.
+     */
+    'backtrace_limit' => (int) env('QUERY_DETECTOR_BACKTRACE_LIMIT', 50),
+
+    /*
      * Here you can whitelist model relations.
      *
      * Right now, you need to define the model relation both as the class name and the attribute name on the model.
@@ -88,5 +94,32 @@ If you use **Lumen**, you need to copy the config file manually and register the
 ```php
 $app->register(\BeyondCode\QueryDetector\LumenQueryDetectorServiceProvider::class);
 ```
+
+## Suppressing Detection
+
+You can temporarily disable N+1 detection for a specific block of code using `withoutDetection()`. All queries inside the closure will be ignored by the detector.
+
+```php
+app(\BeyondCode\QueryDetector\QueryDetector::class)->withoutDetection(function () {
+    // N+1 queries here will not be reported
+    $authors = Author::all();
+
+    foreach ($authors as $author) {
+        $author->posts;
+    }
+});
+```
+
+The closure's return value is passed through, so you can use it inline:
+
+```php
+$authors = app(\BeyondCode\QueryDetector\QueryDetector::class)->withoutDetection(function () {
+    return Author::all()->each(fn ($author) => $author->posts);
+});
+```
+
+This is useful when you intentionally accept N+1 queries in certain contexts (e.g. admin pages with small datasets, or background jobs where eager loading is impractical). Detection resumes automatically after the closure finishes, even if it throws an exception.
+
+## Events
 
 If you need additional logic to run when the package detects unoptimized queries, you can listen to the `\BeyondCode\QueryDetector\Events\QueryDetected` event and write a listener to run your own handler. (e.g. send warning to Sentry/Bugsnag, send Slack notification, etc.)
